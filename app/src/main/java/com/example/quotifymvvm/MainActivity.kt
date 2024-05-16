@@ -2,8 +2,10 @@ package com.example.quotifymvvm
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -35,10 +37,7 @@ class MainActivity : AppCompatActivity() {
         textPrevious = findViewById(R.id.previousText)
         textNext = findViewById(R.id.nextText)
 
-        mainViewModel = ViewModelProvider(
-            this,
-            MainViewModelFactory(applicationContext)
-        ).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, MainViewModelFactory(applicationContext)).get(MainViewModel::class.java)
 
         setQuote(mainViewModel.getQuote())
     }
@@ -50,17 +49,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onPrevious(view: View) {
-        setQuote(mainViewModel.previousQuote())
+        mainViewModel.previousQuote()?.let {
+            setQuote(it)
+        }
     }
 
     fun onNext(view: View) {
-        setQuote(mainViewModel.nextQuote())
+        mainViewModel.nextQuote()?.let {
+            setQuote(it)
+        }
     }
 
     fun onShare(view: View) {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setType("text/plain")
-        intent.putExtra(Intent.EXTRA_TEXT, mainViewModel.getQuote().text)
+        intent.putExtra(Intent.EXTRA_TEXT, "\""+mainViewModel.getQuote().text+"\"" + "\n - " + mainViewModel.getQuote().author)
         startActivity(intent)
     }
 }

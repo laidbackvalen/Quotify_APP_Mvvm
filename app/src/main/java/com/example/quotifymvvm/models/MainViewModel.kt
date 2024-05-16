@@ -1,5 +1,6 @@
 package com.example.quotifymvvm.models
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
@@ -26,9 +27,27 @@ class MainViewModel(val context: Context) : ViewModel() {
 
     fun getQuote() = quoteList[indexedValue]
 
-    fun nextQuote() = quoteList[++indexedValue]
+//    fun nextQuote() = quoteList[++indexedValue]
+//
+//    fun previousQuote() = quoteList[--indexedValue]
 
-    fun previousQuote() = quoteList[--indexedValue]
+    fun nextQuote(): QuoteDataClass? {
+        indexedValue++
+        return if (indexedValue < quoteList.size) {
+            quoteList[indexedValue]
+        } else {
+            indexedValue--
+            null
+        }
+    }
 
-
+    fun previousQuote(): QuoteDataClass? {
+        indexedValue--
+        return if (indexedValue >= 0 && indexedValue < quoteList.size) {
+            quoteList[indexedValue]
+        } else {
+            indexedValue++
+            null
+        }
+    }
 }
